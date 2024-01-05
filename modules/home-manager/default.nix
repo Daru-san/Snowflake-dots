@@ -18,4 +18,5 @@
   syncthing = ./syncthing.nix;
   ags = ./ags.nix;
   oh-my-posh = ./oh-my-posh.nix;
+  firefoxThemes = ./firefoxThemes/default.nix;
 }

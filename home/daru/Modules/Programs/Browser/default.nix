@@ -1,6 +1,6 @@
 {pkgs, ...}:{
   imports = [
-    ./Firefox/default.nix
+    ./Firefox/firefox.nix
   ];
   home.packages = with pkgs; [
     lynx #Terminal browser

@@ -1,23 +1,31 @@
-{pkgs, lib, config, inputs, ...}:let
-  user = "${config.home.username}";
-in {
+{pkgs, lib, config, inputs, outputs, ...}:let
 
-  imports = [
-    ./theme.nix
-  ];
+  # Firefox profile username
+  user = "${config.home.username}";
+
+  # The firefox package from the firefox nightly flake           
+  firefox-package = inputs.firefox.packages.${pkgs.system}.firefox-nightly-bin;
+
+  in {
+
+  # Import the themes module I created
+  imports = [ outputs.homeManagerModules.firefoxThemes ];
 
   programs.firefox = {
     enable = true;
+    
+    # A theme from my custom module
+    cssTheme = "fireside";
 
-    #Package, firefox-nightly
-    package = inputs.firefox.packages.${pkgs.system}.firefox-nightly-bin;
+    # Package, firefox-nightly
+    package = "${firefox-package}";
 
     profiles = {
       ${user} = {
-        #Name
+        # Name
         name = "daruFox";
 
-        #Extensions(from NUR)
+        # Extensions(from NUR)
         extensions = with config.nur.repos.rycee.firefox-addons; [
           behave
           boring-rss
@@ -247,34 +255,12 @@ in {
           "browser.urlbar.suggest.history" = false;
           "browser.urlbar.suggest.topsites" = false;
 
-          "gfx.webrender.all" = true;
-          "layers.acceleration.force-enabled" = true;
-
           "privacy.clearOnShutdown.cache" = true;
           "privacy.clearOnShutdown.cookies" = false;
           "privacy.clearOnShutdown.downloads" = true;
           "privacy.clearOnShutdown.history" = false;
           "privacy.clearOnShutdown.sessions" = false;
-
           "privacy.donottrackheader.enabled" = true;
-          "svg.context-properties.content.enabled" = true;
-          "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-
-          "layout.css.color-mix.enabled" = true;
-          "browser.tabs.delayHidingAudioPlayingIconMS" = 0;
-          "layout.css.backdrop-filter.enabled" = true;
-
-          "privacy.userContext.enabled" = true;
-          "privacy.userContext.ui.enabled" = true;
-          "privacy.userContext.longPressBehavior" = 2;
-
-          #Firefox-one configs
-          "firefoxone.rhythm_sound_tab" = true;
-          "firefoxone.selected_tab_gradient_border" = true;
-          "firefoxone.style_without_leftsidebar" = false;
-          "firefoxone.tree_tabs_style" = false;
-          "firefoxone.without-default-colors" = true;
-          "firefoxone.main-image" = false;
         };
       };
     };
